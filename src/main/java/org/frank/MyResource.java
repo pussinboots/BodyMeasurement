@@ -2,16 +2,18 @@ package org.frank;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import org.frank.json.ApplicationStatus;
+import org.frank.json.ApplicationStatus.State;
+import org.frank.json.ApplicationStatus.Status;
 import org.frank.json.BodyMeasurement;
-import org.frank.pesistence.database.JDBCUrlResolver;
+import org.frank.persistence.PersistenceProvider;
+import org.frank.persistence.database.JDBCUrlResolver;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.sql.SQLException;
+import java.util.Calendar;
 
 @Path("myresource")
 public class MyResource {
@@ -44,9 +46,9 @@ public class MyResource {
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt() {
-        return "Hello, Heroku!";
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationStatus status() {
+        return new ApplicationStatus().applicationState(new Status().type("application").state(State.RUNNING).checkedAt(Calendar.getInstance().getTime()));
     }
 
     @GET
@@ -55,5 +57,13 @@ public class MyResource {
     public BodyMeasurement bodyMeasurement() {
         BodyMeasurement measurement = new BodyMeasurement().type("Blood Pressure").value("140/90");
         return measurement;
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/measurement")
+    public BodyMeasurement saveMeasurement(BodyMeasurement bodyMeasurement) {
+        PersistenceProvider.storage().save(bodyMeasurement.transform());
+        return bodyMeasurement;
     }
 }

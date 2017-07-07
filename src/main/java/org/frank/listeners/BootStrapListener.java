@@ -2,11 +2,10 @@ package org.frank.listeners;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import org.frank.pesistence.database.JDBCUrlResolver;
+import org.frank.persistence.database.JDBCUrlResolver;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class BootStrapListener implements ServletContextListener {

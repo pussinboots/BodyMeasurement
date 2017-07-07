@@ -1,4 +1,4 @@
-package org.frank.pesistence.database;
+package org.frank.persistence.database;
 
 public class JDBCUrlResolver {
 	private static String jdbcUrl;
