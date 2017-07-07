@@ -2,6 +2,8 @@ package org.frank.listeners;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+import org.frank.persistence.database.BodyMeasurementDB;
 import org.frank.persistence.database.JDBCUrlResolver;
 
 import javax.servlet.ServletContextEvent;
@@ -16,8 +18,8 @@ public class BootStrapListener implements ServletContextListener {
         try {
             ConnectionSource connectionSource = new JdbcConnectionSource(JDBCUrlResolver.jdbcUrl());
 
-            /*TableUtils.createTableIfNotExists( connectionSource, Note.class );
-            TableUtils.createTableIfNotExists( connectionSource, Item.class );
+            TableUtils.createTableIfNotExists( connectionSource, BodyMeasurementDB.class );
+            /*TableUtils.createTableIfNotExists( connectionSource, Item.class );
             TableUtils.createTableIfNotExists( connectionSource, Project.class );*/
 
             connectionSource.close();

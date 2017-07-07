@@ -74,6 +74,7 @@
             <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
@@ -156,7 +157,7 @@
         <jersey.version>2.26-b07</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty.version>9.4.6.v20170531</jetty.version>
-        <ormlite.version>3.4</ormlite.version>
+        <ormlite.version>5.0</ormlite.version>
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <lombok.version>1.16.18</lombok.version>
     </properties>
