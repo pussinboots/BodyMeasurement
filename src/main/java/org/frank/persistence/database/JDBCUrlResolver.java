@@ -3,7 +3,7 @@ package org.frank.persistence.database;
 public class JDBCUrlResolver {
 	private static String jdbcUrl;
 	static {
-		jdbcUrl = (System.getenv("JDBC_DATABASE_URL") != null) ? System.getenv("JDBC_DATABASE_URL") : "postgresql://localhost:5432?user=postgres";
+		jdbcUrl = (System.getenv("JDBC_DATABASE_URL") != null) ? System.getenv("JDBC_DATABASE_URL") : "jdbc:postgresql://localhost:5432?user=postgres";
 	}
 
 	private JDBCUrlResolver() {}
