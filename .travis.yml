@@ -8,6 +8,7 @@ before_deploy:
 - scripts/bliss wget -O - https://unitcover.herokuapp.com/scripts/upload.sh | bash
   /dev/stdin pussinboots BodyMeasurement ./target/surefire-reports/ ""
 deploy:
+  provider: heroku
   api_key:
     secure: A7TUJnwZQzMRytflXyZKaBlgc3tLrLBTEuPCnEF+1P+KWEvriqFq8i2qVVZwFI5psLMjaAHgcGUuqrDonsDFSkzAPGYd1F8by33G7diodyfAi7HDiDl7nZnL/BL1//rOyniJQlrq86w8O0bHT9cMrS2aiYO4GmNhqvyZ9/nosfYKgY+nTgGqYEgpK31qWdJwtq1EEVsRjLbCANwdotNhlV1kxWn1Zbu9A44hRBBt1sSKI0RVcpzPn49BHGAPlqJVJaBJ8RVkh54EvZuiGUdVBVFdiy1q62vLbe7XGT1il07SsVqxIrCazSrD69uD7Z+bPT0HEnlEhEj+X5BieFF3rJ5AySaoetlhMukOXfYEQb3wJzQbY4Nl72kPIXRP4OgjW6WbMzqGAlgfTPmJFv2HK9Ffjhq7wS7zlcC/jF/YQkapWi9mCupbBEQxga/fFzvPGOwT6VkPrywcegV9Z5M6vrtQU/rASIq3phO1vM4dgRim3A+8L8lcA9MbATZYJR1d+qClAqADqe8BvU2eauBub4kBF0OzP7Zo1eb0GvsNNjjuhx2wKogNES0rqin3Egzoff4LIl3i9j4X/7nhDgkbriA/VuXdrQ61pJrRVQok8rGlA3yZZZHqbLvXErRTiw+pm0S8ZC8ae1Y/KZmwT6QOOcO8IP7T55vQdoKQ7cT93Tk=
   app: body-measurement
