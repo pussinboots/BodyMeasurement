@@ -1,3 +1,7 @@
 language: java
 jdk:
   - oraclejdk8
+after_failure:
+- scripts/bliss wget -O - https://unitcover.herokuapp.com/scripts/upload.sh | bash /dev/stdin pussinboots BodyMeasurement ./target/surefire-reports/ "" 
+before_deploy:
+- scripts/bliss wget -O - https://unitcover.herokuapp.com/scripts/upload.sh | bash /dev/stdin pussinboots BodyMeasurement ./target/surefire-reports/ ""
