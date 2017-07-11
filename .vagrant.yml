@@ -1,0 +1,8 @@
+repo:
+- pussinboots/vagrant-devel-full
+folder: /vagrant/project/BodyMeasurement
+deps:
+- java8
+- sublime3
+- heroku
+- travis
