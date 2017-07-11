@@ -1,5 +1,5 @@
 repo:
-- pussinboots/vagrant-devel-full
+- pussinboots/vagrant-devel
 folder: /vagrant/project/BodyMeasurement
 deps:
 - java8
