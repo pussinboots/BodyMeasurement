@@ -6,3 +6,4 @@ deps:
 - sublime3
 - heroku
 - travis
+- maven
