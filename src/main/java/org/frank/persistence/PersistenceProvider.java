@@ -1,6 +1,6 @@
 package org.frank.persistence;
 
-import org.frank.persistence.database.PostgreSQLStorage;
+import org.frank.persistence.database.DatabaseStorage;
 import org.frank.utils.TransformationBuilder;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class PersistenceProvider {
     public interface Storage<T, ID> {
-        void save(T entity) throws SQLException;
+        T save(T entity) throws SQLException;
 
         T get(ID id) throws SQLException;
 
@@ -50,6 +50,6 @@ public class PersistenceProvider {
                 System.out.println("Save entity " + entity.toString());
             }
         };*/
-        return new PostgreSQLStorage<>(clazz);
+        return new DatabaseStorage<>(clazz);
     }
 }

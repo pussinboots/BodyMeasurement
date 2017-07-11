@@ -1,8 +1,10 @@
 package org.frank.json;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.Wither;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.utils.TransformationBuilder;
 
@@ -17,6 +19,8 @@ import java.util.Date;
 @Data
 @Accessors(fluent = true)
 @NoArgsConstructor
+@AllArgsConstructor
+@Wither
 public class BodyMeasurement extends TransformationBuilder.Transformer.SelfTransformer<BodyMeasurement, BodyMeasurementPojo> {
 	private Long id;
 	private String type, value, patientId, createdBy;

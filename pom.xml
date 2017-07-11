@@ -99,6 +99,13 @@
             <type>pom</type>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -110,8 +117,8 @@
                 <version>2.5.1</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -160,5 +167,6 @@
         <ormlite.version>5.0</ormlite.version>
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <lombok.version>1.16.18</lombok.version>
+        <hsqldb.version>1.8.0.10</hsqldb.version>
     </properties>
 </project>

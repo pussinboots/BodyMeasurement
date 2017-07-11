@@ -11,18 +11,19 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class PostgreSQLStorage<T, ID> extends PersistenceProvider.AbstractStorage<T, ID> {
+public class DatabaseStorage<T, ID> extends PersistenceProvider.AbstractStorage<T, ID> {
 
     private Dao<T, ID> dao;
 
-    public PostgreSQLStorage(Class<T> clazz) throws SQLException {
+    public DatabaseStorage(Class<T> clazz) throws SQLException {
         ConnectionSource connectionSource = new JdbcConnectionSource(JDBCUrlResolver.jdbcUrl());
         this.dao = DaoManager.createDao( connectionSource, clazz );
     }
 
     @Override
-    public void save(T entity) throws SQLException {
+    public T save(T entity) throws SQLException {
         dao.create(entity);
+        return entity;
     }
 
     @Override

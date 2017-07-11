@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
@@ -23,21 +24,13 @@ public class BodyMeasurementResource {
     private PersistenceProvider.Storage<BodyMeasurementDB, Long> bodyMeasurementDao;
 
     @PostConstruct
-    public void setup() {
-        try {
-            bodyMeasurementDao = PersistenceProvider.storage(BodyMeasurementDB.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void setup() throws SQLException {
+        bodyMeasurementDao = PersistenceProvider.storage(BodyMeasurementDB.class);
     }
 
     @PreDestroy
-    public void pre_destroy () {
-        try {
-            bodyMeasurementDao.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void pre_destroy () throws IOException {
+        bodyMeasurementDao.close();
     }
 
     @GET
@@ -72,7 +65,7 @@ public class BodyMeasurementResource {
     @Path("measurement")
     @Consumes(MediaType.APPLICATION_JSON)
     public BodyMeasurement saveMeasurement(BodyMeasurement bodyMeasurement) throws SQLException {
-        bodyMeasurementDao.save(new BodyMeasurementDB().from(bodyMeasurement.from()));
-        return bodyMeasurement;
+        BodyMeasurementDB bodyMeasurementDB = bodyMeasurementDao.save(new BodyMeasurementDB().from(bodyMeasurement.from()));
+        return new BodyMeasurement().to(bodyMeasurementDB.to());
     }
 }
