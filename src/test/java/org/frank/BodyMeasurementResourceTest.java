@@ -19,6 +19,7 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -71,9 +72,17 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     public void testGetIt() {
         final ApplicationStatus applicationStatus = target().path("body/meta/status").request().get(new GenericType<ApplicationStatus>(){});
 
-        assertNull(applicationStatus.databaseState());
-        assertEquals(ApplicationStatus.State.RUNNING, applicationStatus.applicationState().state());
-        assertEquals("application", applicationStatus.applicationState().type());
+        assertEquals(ApplicationStatus.State.RUNNING, applicationStatus.states().get(0).state());
+        assertEquals("application", applicationStatus.states().get(0).type());
+    }
+
+    @Test
+    public void testGetNonExistingMeasurement() {
+        Response response = target().path("body/measurement/123456").request().get();
+        final BodyMeasurement measurement = response.readEntity(new GenericType<BodyMeasurement>(){});
+
+        assertEquals(204, response.getStatus());
+        assertNull(measurement);
     }
 
     @Test

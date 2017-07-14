@@ -6,7 +6,9 @@ import lombok.experimental.Accessors;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -26,6 +28,10 @@ public class ApplicationStatus {
         private Date checkedAt;
     }
 
-    private Status databaseState;
-    private Status applicationState;
+    private List<Status> states = new ArrayList<Status>();
+
+    public ApplicationStatus addStatus(Status status) {
+        states.add(status);
+        return this;
+    }
 }
