@@ -15,7 +15,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 @Data
 @Accessors(fluent = true)
 @NoArgsConstructor

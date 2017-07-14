@@ -5,6 +5,7 @@ import org.frank.json.ApplicationStatus.State;
 import org.frank.json.ApplicationStatus.Status;
 import org.frank.json.BodyMeasurement;
 import org.frank.json.Items;
+import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.persistence.PersistenceProvider;
 import org.frank.persistence.database.BodyMeasurementDB;
@@ -44,29 +45,29 @@ public class BodyMeasurementResource {
     @GET
     @Path("measurement/{measurementId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public BodyMeasurement getMeasurement(@PathParam("measurementId") Long measurementId) throws SQLException {
+    public JSONResponse<BodyMeasurement> getMeasurement(@PathParam("measurementId") Long measurementId) throws SQLException {
         BodyMeasurement bodyMeasurement = new BodyMeasurement().to(bodyMeasurementDao.getAs(measurementId, new BodyMeasurementPojo()));
-        return bodyMeasurement;
+        return new JSONResponse<BodyMeasurement>().item(bodyMeasurement);
     }
 
     @GET
     @Path("measurements")
     @Produces(MediaType.APPLICATION_JSON)
-    public Items<BodyMeasurement> getMeasurements() throws SQLException {
+    public JSONResponse<BodyMeasurement> getMeasurements() throws SQLException {
         List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(new TransformationBuilder.ListTransformer<BodyMeasurementDB, BodyMeasurement>() {
             @Override
             public BodyMeasurement transform(BodyMeasurementDB entity) {
                 return new BodyMeasurement().to(entity.to());
             }
         });
-        return new Items(bodyMeasurements);
+        return new JSONResponse<BodyMeasurement>().items(bodyMeasurements);
     }
 
     @POST
     @Path("measurement")
     @Consumes(MediaType.APPLICATION_JSON)
-    public BodyMeasurement saveMeasurement(BodyMeasurement bodyMeasurement) throws SQLException {
+    public JSONResponse<BodyMeasurement> saveMeasurement(BodyMeasurement bodyMeasurement) throws SQLException {
         BodyMeasurementDB bodyMeasurementDB = bodyMeasurementDao.save(new BodyMeasurementDB().from(bodyMeasurement.from()));
-        return new BodyMeasurement().to(bodyMeasurementDB.to());
+        return new JSONResponse<BodyMeasurement>().item(new BodyMeasurement().to(bodyMeasurementDB.to()));
     }
 }

@@ -69,7 +69,7 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testGetIt() {
+    public void testGetMetaStatus() {
         final ApplicationStatus applicationStatus = target().path("body/meta/status").request().get(new GenericType<ApplicationStatus>(){});
 
         assertEquals(ApplicationStatus.State.RUNNING, applicationStatus.states().get(0).state());
@@ -96,7 +96,7 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     public void testGetMeasurements() {
         final Items<BodyMeasurement> measurements = target().path("body/measurements").request().get(new GenericType<Items<BodyMeasurement>>(){});
 
-        assertEquals(2, measurements.size());
+        assertEquals(2, measurements.items().size());
         assertEquals(2, measurements.items().size());
         assertThat(expectedMeasurement, equalTo(measurements.itemsAsList().get(0)));
         assertThat(expectedMeasurement.withId(2L).withType("Body Temperature").withValue("36,5"), equalTo(measurements.itemsAsList().get(1)));
