@@ -1,5 +1,7 @@
 package org.frank;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.frank.json.ApplicationStatus;
 import org.frank.json.ApplicationStatus.State;
 import org.frank.json.ApplicationStatus.Status;
@@ -8,6 +10,7 @@ import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.persistence.PersistenceProvider;
 import org.frank.persistence.database.BodyMeasurementDB;
+import org.frank.utils.CollectionsUtils;
 import org.frank.utils.TransformationBuilder;
 
 import javax.annotation.PostConstruct;
@@ -18,9 +21,27 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+
+import static org.frank.utils.CollectionsUtils.Pair.pair;
 
 @Path("body")
 public class BodyMeasurementResource {
+
+    @Data
+    @Accessors(fluent = true)
+    private static class FilterMeasurements implements PersistenceProvider.StorageFilter<FilterMeasurements> {
+        private @QueryParam("patientId") String patientId;
+
+        @Override
+        public Map<String, Object> transform(FilterMeasurements entity) {
+            return CollectionsUtils.hashMap(pair("patientId", patientId));
+        }
+
+        @Override
+        public Map<String, Object> transform() { return transform(this); }
+    }
+
 
     private PersistenceProvider.Storage<BodyMeasurementDB, Long> bodyMeasurementDao;
 
@@ -52,8 +73,8 @@ public class BodyMeasurementResource {
     @GET
     @Path("measurements")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONResponse<BodyMeasurement> getMeasurements() throws SQLException {
-        List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(entity -> BodyMeasurement.fromPojo(entity.toPojo()));
+    public JSONResponse<BodyMeasurement> getMeasurements(@BeanParam FilterMeasurements filterMeasurements) throws SQLException {
+        List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(filterMeasurements, entity -> BodyMeasurement.fromPojo(entity.toPojo()));
         return new JSONResponse<BodyMeasurement>().items(bodyMeasurements);
     }
 

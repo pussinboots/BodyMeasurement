@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,11 +37,19 @@ public class BodyMeasurementResourceTest extends JerseyTest {
         System.setProperty("JDBC_DATABASE_URL", "jdbc:hsqldb:mem:test");
     }
 
-    private BodyMeasurement expectedMeasurement;
+    public static void logToStdOut (String className)
+    {
+        Logger logger = Logger.getLogger(className);
+        new ConsoleHandler(){ { setLevel(Level.ALL); logger.setLevel(Level.FINE); logger.addHandler(this); } };
+    }
+
+    private BodyMeasurement expectedMeasurementOne;
+    private BodyMeasurement expectedMeasurementTwo;
 
     @Before
     public void before() throws SQLException, IOException {
-        Logger.getGlobal().setLevel(Level.FINE);
+
+        logToStdOut("org.glassfish.grizzly.http.server.HttpHandler");
         setupTestDB();
     }
 
@@ -61,8 +70,9 @@ public class BodyMeasurementResourceTest extends JerseyTest {
                 .value("90/140");
 
         storage.save(measurementDB);
-        expectedMeasurement = BodyMeasurement.fromPojo(measurementDB.toPojo());
-        storage.save(measurementDB.type("Body Temperature").value("36,5"));
+        expectedMeasurementOne = BodyMeasurement.fromPojo(measurementDB.toPojo());
+        storage.save(measurementDB.type("Body Temperature").value("36,5").patientId(UUID.randomUUID().toString()));
+        expectedMeasurementTwo = BodyMeasurement.fromPojo(measurementDB.toPojo());
         storage.close();
     }
 
@@ -92,7 +102,7 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     public void testGetMeasurement() {
         final JSONResponse<BodyMeasurement> response = target().path("body/measurement/1").request().get(new GenericType<JSONResponse<BodyMeasurement>>(){});
 
-        assertThat(expectedMeasurement, equalTo(response.data().item()));
+        assertThat(expectedMeasurementOne, equalTo(response.data().item()));
     }
 
     @Test
@@ -101,14 +111,23 @@ public class BodyMeasurementResourceTest extends JerseyTest {
 
         assertEquals((Integer)2, jsonResponse.data().size());
         assertEquals(2, jsonResponse.data().items().size());
-        assertThat(expectedMeasurement, equalTo(jsonResponse.data().asList().get(0)));
-        assertThat(expectedMeasurement.withId(2L).withType("Body Temperature").withValue("36,5"), equalTo(jsonResponse.data().asList().get(1)));
+        assertThat(expectedMeasurementOne, equalTo(jsonResponse.data().asList().get(0)));
+        assertThat(expectedMeasurementTwo, equalTo(jsonResponse.data().asList().get(1)));
+    }
+
+    @Test
+    public void testGetMeasurementsFilterByPatientId() {
+        final JSONResponse<BodyMeasurement> jsonResponse = target().path("body/measurements").queryParam("patientId", expectedMeasurementOne.patientId()).request().get(new GenericType<JSONResponse<BodyMeasurement>>(){});
+
+        assertEquals((Integer)1, jsonResponse.data().size());
+        assertEquals(1, jsonResponse.data().items().size());
+        assertThat(expectedMeasurementOne, equalTo(jsonResponse.data().asList().get(0)));
     }
 
     @Test
     public void testSaveMeasurement() {
-        final JSONResponse<BodyMeasurement> jsonResponse = target().path("body/measurement").request().post(Entity.json(expectedMeasurement), new GenericType<JSONResponse<BodyMeasurement>>(){});
+        final JSONResponse<BodyMeasurement> jsonResponse = target().path("body/measurement").request().post(Entity.json(expectedMeasurementOne), new GenericType<JSONResponse<BodyMeasurement>>(){});
 
-        assertThat(expectedMeasurement.withId(3L), equalTo(jsonResponse.data().item()));
+        assertThat(expectedMeasurementOne.withId(3L), equalTo(jsonResponse.data().item()));
     }
 }
