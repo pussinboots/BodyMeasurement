@@ -45,7 +45,7 @@ public class BodyMeasurementResource {
     @Path("measurement/{measurementId}")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONResponse<BodyMeasurement> getMeasurement(@PathParam("measurementId") Long measurementId) throws SQLException {
-        BodyMeasurement bodyMeasurement = new BodyMeasurement().to(bodyMeasurementDao.getAs(measurementId, new BodyMeasurementPojo()));
+        BodyMeasurement bodyMeasurement = BodyMeasurement.fromPojo(bodyMeasurementDao.getAs(measurementId, BodyMeasurementDB.tranformerToPojo()));
         return new JSONResponse<BodyMeasurement>().item(bodyMeasurement);
     }
 
@@ -53,12 +53,7 @@ public class BodyMeasurementResource {
     @Path("measurements")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONResponse<BodyMeasurement> getMeasurements() throws SQLException {
-        List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(new TransformationBuilder.ListTransformer<BodyMeasurementDB, BodyMeasurement>() {
-            @Override
-            public BodyMeasurement transform(BodyMeasurementDB entity) {
-                return new BodyMeasurement().to(entity.to());
-            }
-        });
+        List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(entity -> BodyMeasurement.fromPojo(entity.toPojo()));
         return new JSONResponse<BodyMeasurement>().items(bodyMeasurements);
     }
 
@@ -67,7 +62,7 @@ public class BodyMeasurementResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public JSONResponse<BodyMeasurement> saveMeasurement(BodyMeasurement bodyMeasurement) throws SQLException {
-        BodyMeasurementDB bodyMeasurementDB = bodyMeasurementDao.save(new BodyMeasurementDB().from(bodyMeasurement.from()));
-        return new JSONResponse<BodyMeasurement>().item(new BodyMeasurement().to(bodyMeasurementDB.to()));
+        BodyMeasurementDB bodyMeasurementDB = bodyMeasurementDao.save(new BodyMeasurementDB().fromPojo(bodyMeasurement.toPojo()));
+        return new JSONResponse<BodyMeasurement>().item(BodyMeasurement.fromPojo(bodyMeasurementDB.toPojo()));
     }
 }

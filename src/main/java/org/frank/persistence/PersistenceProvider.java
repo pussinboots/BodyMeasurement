@@ -15,15 +15,15 @@ public class PersistenceProvider {
 
         T get(ID id) throws SQLException;
 
-        <S> S getAs(ID id, TransformationBuilder.Transformer<T, S> transformer) throws SQLException;
+        <S> S getAs(ID id, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException;
 
         List<T> list(Map<String, Object> fields) throws SQLException;
 
         List<T> list() throws SQLException;
 
-        <S> List<S> listAs(Map<String, Object> fields, TransformationBuilder.ListTransformer<T, S> transformer) throws SQLException;
+        <S> List<S> listAs(Map<String, Object> fields, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException;
 
-        <S> List<S> listAs(TransformationBuilder.ListTransformer<T, S> transformer) throws SQLException;
+        <S> List<S> listAs(TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException;
 
         void close() throws IOException;
     }
@@ -31,8 +31,8 @@ public class PersistenceProvider {
     public static abstract class AbstractStorage<T, ID> implements Storage<T, ID> {
 
         @Override
-        public <S> S getAs(ID id, TransformationBuilder.Transformer<T, S> transformer) throws SQLException {
-            return transformer.from(get(id));
+        public <S> S getAs(ID id, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException {
+            return transformer.transform(get(id));
         }
 
         @Override
@@ -41,23 +41,17 @@ public class PersistenceProvider {
         }
 
         @Override
-        public <S> List<S> listAs(TransformationBuilder.ListTransformer<T, S> transformer) throws SQLException {
+        public <S> List<S> listAs(TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException {
             return listAs(null, transformer);
         }
 
         @Override
-        public <S> List<S> listAs(Map<String, Object> fields, TransformationBuilder.ListTransformer<T, S> transformer) throws SQLException {
+        public <S> List<S> listAs(Map<String, Object> fields, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException {
             return TransformationBuilder.<T, S>list(list(fields)).transformer(transformer).apply();
         }
     }
 
     public static <T, ID> Storage<T, ID> storage(Class<T> clazz) throws SQLException {
-        /*return new Storage<T>() {
-            @Override
-            public void save(T entity) {
-                System.out.println("Save entity " + entity.toString());
-            }
-        };*/
         return new DatabaseStorage<>(clazz);
     }
 }

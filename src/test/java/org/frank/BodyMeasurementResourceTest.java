@@ -14,7 +14,6 @@ import org.frank.persistence.database.JDBCUrlResolver;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -25,7 +24,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.UUID;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
@@ -61,7 +61,7 @@ public class BodyMeasurementResourceTest extends JerseyTest {
                 .value("90/140");
 
         storage.save(measurementDB);
-        expectedMeasurement = new BodyMeasurement().to(measurementDB.to());
+        expectedMeasurement = BodyMeasurement.fromPojo(measurementDB.toPojo());
         storage.save(measurementDB.type("Body Temperature").value("36,5"));
         storage.close();
     }

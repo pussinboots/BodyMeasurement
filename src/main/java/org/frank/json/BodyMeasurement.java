@@ -18,31 +18,46 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Wither
-public class BodyMeasurement extends TransformationBuilder.Transformer.SelfTransformer<BodyMeasurement, BodyMeasurementPojo> {
+public class BodyMeasurement {
+
 	private Long id;
 	private String type, value, patientId, createdBy;
 	public Date measuredAt;
 
-	@Override
-	public BodyMeasurementPojo from(BodyMeasurement entity) {
-		if (entity == null) return null;
-		return new BodyMeasurementPojo().id(entity.id())
-				.type(entity.type())
-				.value(entity.value())
-				.patientId(entity.patientId())
-				.createdBy(createdBy())
-				.createdAt(Calendar.getInstance().getTime())
-				.measuredAt(entity.measuredAt());
+	public static TransformationBuilder.SimpleTransformer<BodyMeasurement, BodyMeasurementPojo> tranformerToPojo() {
+		return entity -> {
+            if (entity == null) return null;
+            return new BodyMeasurementPojo().id(entity.id())
+                    .type(entity.type())
+                    .value(entity.value())
+                    .patientId(entity.patientId())
+                    .createdBy(entity.createdBy())
+                    .createdAt(Calendar.getInstance().getTime())
+                    .measuredAt(entity.measuredAt());
+        };
 	}
 
-	@Override
-	public BodyMeasurement to(BodyMeasurementPojo entity) {
-		if (entity == null) return null;
-		return new BodyMeasurement().id(entity.id())
-				.type(entity.type())
-				.value(entity.value())
-				.patientId(entity.patientId())
-				.createdBy(entity.createdBy())
-				.measuredAt(entity.measuredAt());
+	public static TransformationBuilder.SimpleTransformer<BodyMeasurementPojo, BodyMeasurement> transformerFromPojo() {
+		return entity -> {
+			if (entity == null) return null;
+			return new BodyMeasurement().id(entity.id())
+					.type(entity.type())
+					.value(entity.value())
+					.patientId(entity.patientId())
+					.createdBy(entity.createdBy())
+					.measuredAt(entity.measuredAt());
+		};
+	}
+
+	public static BodyMeasurementPojo toPojo(BodyMeasurement entity) {
+		return tranformerToPojo().transform(entity);
+	}
+
+	public static BodyMeasurement fromPojo(BodyMeasurementPojo entity) {
+		return transformerFromPojo().transform(entity);
+	}
+
+	public BodyMeasurementPojo toPojo() {
+		return toPojo(this);
 	}
 }
