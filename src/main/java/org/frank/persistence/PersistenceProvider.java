@@ -37,7 +37,7 @@ public class PersistenceProvider {
 
         @Override
         public List<T> list() throws SQLException {
-            return list(Collections.<String, Object>emptyMap());
+            return list(Collections.emptyMap());
         }
 
         @Override

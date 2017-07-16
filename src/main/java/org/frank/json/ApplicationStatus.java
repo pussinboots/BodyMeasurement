@@ -16,7 +16,7 @@ import java.util.List;
 @Accessors(fluent = true)
 public class ApplicationStatus {
 
-    public enum State {CONNECTING, RUNNING, ERROR, UNKNOWN;}
+    public enum State {CONNECTING, RUNNING, ERROR, UNKNOWN}
 
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
