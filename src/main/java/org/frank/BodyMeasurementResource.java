@@ -4,7 +4,6 @@ import org.frank.json.ApplicationStatus;
 import org.frank.json.ApplicationStatus.State;
 import org.frank.json.ApplicationStatus.Status;
 import org.frank.json.BodyMeasurement;
-import org.frank.json.Items;
 import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.persistence.PersistenceProvider;
@@ -66,6 +65,7 @@ public class BodyMeasurementResource {
     @POST
     @Path("measurement")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public JSONResponse<BodyMeasurement> saveMeasurement(BodyMeasurement bodyMeasurement) throws SQLException {
         BodyMeasurementDB bodyMeasurementDB = bodyMeasurementDao.save(new BodyMeasurementDB().from(bodyMeasurement.from()));
         return new JSONResponse<BodyMeasurement>().item(new BodyMeasurement().to(bodyMeasurementDB.to()));

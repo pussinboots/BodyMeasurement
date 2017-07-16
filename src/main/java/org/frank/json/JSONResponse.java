@@ -22,10 +22,14 @@ public class JSONResponse<T> {
     @Accessors(fluent = true)
     @NoArgsConstructor
     @JsonInclude(NON_NULL)
-    public class Data {
+    public static class Data<T> {
         private Integer size, total, page;
-        private List<T> items;
+        private Collection<T> items;
         private T item;
+
+        public List<T> asList() {
+            return new ArrayList<>(items);
+        }
     }
 
     @lombok.Data
@@ -44,7 +48,7 @@ public class JSONResponse<T> {
         private String responseGUID;
     }
 
-    private Data data;
+    private Data<T> data;
     private Paging paging;
     private Meta meta;
 

@@ -6,7 +6,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.frank.json.ApplicationStatus;
 import org.frank.json.BodyMeasurement;
-import org.frank.json.Items;
+import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.persistence.PersistenceProvider;
 import org.frank.persistence.database.BodyMeasurementDB;
@@ -14,6 +14,7 @@ import org.frank.persistence.database.JDBCUrlResolver;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.logging.*;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
@@ -38,6 +40,7 @@ public class BodyMeasurementResourceTest extends JerseyTest {
 
     @Before
     public void before() throws SQLException, IOException {
+        Logger.getGlobal().setLevel(Level.FINE);
         setupTestDB();
     }
 
@@ -79,33 +82,33 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     @Test
     public void testGetNonExistingMeasurement() {
         Response response = target().path("body/measurement/123456").request().get();
-        final BodyMeasurement measurement = response.readEntity(new GenericType<BodyMeasurement>(){});
+        final JSONResponse<BodyMeasurement> jsonResponse = response.readEntity(new GenericType<JSONResponse<BodyMeasurement>>(){});
 
-        assertEquals(204, response.getStatus());
-        assertNull(measurement);
+        assertEquals(200, response.getStatus());
+        assertNull(jsonResponse.data().item());
     }
 
     @Test
     public void testGetMeasurement() {
-        final BodyMeasurement measurement = target().path("body/measurement/1").request().get(new GenericType<BodyMeasurement>(){});
+        final JSONResponse<BodyMeasurement> response = target().path("body/measurement/1").request().get(new GenericType<JSONResponse<BodyMeasurement>>(){});
 
-        assertThat(expectedMeasurement, equalTo(measurement));
+        assertThat(expectedMeasurement, equalTo(response.data().item()));
     }
 
     @Test
     public void testGetMeasurements() {
-        final Items<BodyMeasurement> measurements = target().path("body/measurements").request().get(new GenericType<Items<BodyMeasurement>>(){});
+        final JSONResponse<BodyMeasurement> jsonResponse = target().path("body/measurements").request().get(new GenericType<JSONResponse<BodyMeasurement>>(){});
 
-        assertEquals(2, measurements.items().size());
-        assertEquals(2, measurements.items().size());
-        assertThat(expectedMeasurement, equalTo(measurements.itemsAsList().get(0)));
-        assertThat(expectedMeasurement.withId(2L).withType("Body Temperature").withValue("36,5"), equalTo(measurements.itemsAsList().get(1)));
+        assertEquals((Integer)2, jsonResponse.data().size());
+        assertEquals(2, jsonResponse.data().items().size());
+        assertThat(expectedMeasurement, equalTo(jsonResponse.data().asList().get(0)));
+        assertThat(expectedMeasurement.withId(2L).withType("Body Temperature").withValue("36,5"), equalTo(jsonResponse.data().asList().get(1)));
     }
 
     @Test
     public void testSaveMeasurement() {
-        final BodyMeasurement measurement = target().path("body/measurement").request().post(Entity.json(expectedMeasurement), new GenericType<BodyMeasurement>(){});
+        final JSONResponse<BodyMeasurement> jsonResponse = target().path("body/measurement").request().post(Entity.json(expectedMeasurement), new GenericType<JSONResponse<BodyMeasurement>>(){});
 
-        assertThat(expectedMeasurement.withId(3L), equalTo(measurement));
+        assertThat(expectedMeasurement.withId(3L), equalTo(jsonResponse.data().item()));
     }
 }

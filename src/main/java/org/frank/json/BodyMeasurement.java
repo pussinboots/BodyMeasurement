@@ -8,8 +8,6 @@ import lombok.experimental.Wither;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.utils.TransformationBuilder;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Calendar;
 import java.util.Date;
