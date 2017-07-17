@@ -1,9 +1,10 @@
-package org.frank;
+package org.frank.resources;
 
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.frank.TestDatabase;
 import org.frank.json.ApplicationStatus;
 import org.frank.json.BodyMeasurement;
 import org.frank.json.JSONResponse;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -54,26 +56,29 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     }
 
     private void setupTestDB() throws SQLException, IOException {
-        ConnectionSource connectionSource = new JdbcConnectionSource(JDBCUrlResolver.jdbcUrl());
-        DaoManager.createDao( connectionSource, BodyMeasurementDB.class ).executeRaw("DROP SCHEMA PUBLIC CASCADE");
-
-        TableUtils.createTableIfNotExists(connectionSource, BodyMeasurementDB.class);
-        connectionSource.closeQuietly();
-
-        PersistenceProvider.Storage<BodyMeasurementDB, Long> storage = PersistenceProvider.storage(BodyMeasurementDB.class);
-        assertEquals("Ensure an empty test database.", 0, storage.list().size());
-        BodyMeasurementDB measurementDB = new BodyMeasurementDB().createdBy("test")
+        BodyMeasurementDB measurementDBOne = new BodyMeasurementDB().createdBy("test")
                 .measuredAt(Calendar.getInstance().getTime())
                 .patientId(UUID.randomUUID().toString())
                 .state(BodyMeasurementPojo.State.CREATED)
                 .type("Blood Pressure")
                 .value("90/140");
 
-        storage.save(measurementDB);
-        expectedMeasurementOne = BodyMeasurement.fromPojo(measurementDB.toPojo());
-        storage.save(measurementDB.type("Body Temperature").value("36,5").patientId(UUID.randomUUID().toString()));
-        expectedMeasurementTwo = BodyMeasurement.fromPojo(measurementDB.toPojo());
-        storage.close();
+        BodyMeasurementDB measurementDBTwo = new BodyMeasurementDB().createdBy("test")
+                .measuredAt(Calendar.getInstance().getTime())
+                .patientId(UUID.randomUUID().toString())
+                .state(BodyMeasurementPojo.State.CREATED)
+                .type("Body Temperature")
+                .value("36,5");
+
+        List<BodyMeasurement> inserted = TestDatabase.db(BodyMeasurementDB.class)
+                .startDatabase()
+                .connect()
+                .insert(measurementDBOne, measurementDBTwo)
+                .close()
+                .insertedAs(entity -> BodyMeasurement.fromPojo(entity.toPojo()));
+
+        expectedMeasurementOne = inserted.get(0);
+        expectedMeasurementTwo = inserted.get(1);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.frank;
+package org.frank.resources;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
