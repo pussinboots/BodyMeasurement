@@ -5,16 +5,16 @@
 
 [![Unit Tests](http://unitcover.herokuapp.com/api/pussinboots/BodyMeasurement/testsuites/badge)](https://unitcover.herokuapp.com/#/builds/pussinboots/BodyMeasurement/builds)
 
-##Introduction
+## Introduction
 
 Implementation of a rest API that stores body measurements for example body tempreture or blood presure lets say from healts or a sports app. 
 
-##Build Requirements
+## Build Requirements
 
 * Java 1.8+
 * Maven 3+
 
-##Frameworks
+## Frameworks
 
 * Jersey 2
   Rest Service Framework
@@ -27,20 +27,20 @@ Implementation of a rest API that stores body measurements for example body temp
 * lombok 1.16 
   For Reducing Boilerplate code
   
-##Runtime Requirements
+## Runtime Requirements
 
 * Java 1.8+
 * Web Container
 * PostgreSQL 9
 
-##Demo 
+## Demo 
 
 The running instance is deployed on Heroku [here](https://body-measurement.herokuapp.com/index.html).
 
-##Packaging
+## Packaging
 
 The application is packaged as an war archive.
 
-##Deployment
+## Deployment
 
 The project is build with Travis and after a succesfull build also deployed to Heroku.
