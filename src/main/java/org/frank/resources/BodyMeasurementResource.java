@@ -7,11 +7,9 @@ import org.frank.json.ApplicationStatus.State;
 import org.frank.json.ApplicationStatus.Status;
 import org.frank.json.BodyMeasurement;
 import org.frank.json.JSONResponse;
-import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.persistence.PersistenceProvider;
 import org.frank.persistence.database.BodyMeasurementDB;
 import org.frank.utils.CollectionsUtils;
-import org.frank.utils.TransformationBuilder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

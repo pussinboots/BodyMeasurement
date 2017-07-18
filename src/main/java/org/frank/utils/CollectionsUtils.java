@@ -1,6 +1,5 @@
 package org.frank.utils;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
