@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+    <p>
+        This is the index page of the BodyMeasurementAPI prototype.
+
+        This prototype offers four rest api calls.
+    </p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>
+                Method
+            </td>
+            <td>
+                Url
+            </td>
+            <td>
+                Description
+            </td>
+            <td>
+                Full Url
+            </td>
+            <td>
+                Example Request
+            </td>
+            <td>
+                Example Response
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                GET
+            </td>
+            <td>
+                /body/meta/status
+            </td>
+            <td>
+                Perform a little health check and return status.
+            </td>
+            <td>
+                https://body-measurement.herokuapp.com/api/body/meta/status
+            </td>
+            <td></td>
+            <td>
+                <pre>{
+    "states": [
+        {
+            "type": "application",
+            "errorMessage": null,
+            "state": "RUNNING",
+            "checkedAt": 1500388257133
+        }, {
+            "type": "database",
+            "errorMessage": null,
+            "state": "RUNNING",
+            "checkedAt": 1500388257151
+        }
+    ]
+}</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                POST
+            </td>
+            <td>
+                /api/body/measurement
+            </td>
+            <td>
+                Take the POST body as json and create a new measurement in the database and return it.
+            </td>
+            <td>
+                https://body-measurement.herokuapp.com/api/body/measurement
+            </td>
+            <td>
+                <pre>
+{
+    "type": "Blood Pressure",
+    "value": "90/140",
+    "patientId": "05794250-2247-48ac-8a94-ef37f2947141",
+    "createdBy": "Smart Watch",
+    "measuredAt": "2007-12-24T18:21:00.000Z"
+}
+                </pre>
+            </td>
+            <td>
+                <pre>
+{
+    "data": {
+        "item": {
+            "id": 3,
+            "type": "Blood Pressure",
+            "value": "90/140",
+            "patientId": "05794250-2247-48ac-8a94-ef37f2947141",
+            "createdBy": "Smart Watch",
+            "measuredAt": 1198520460000
+        }
+    },
+    "meta": {
+        "requestedAt": 1500386212032,
+        "responseGUID": "9568f757-a9ca-40bd-aa67-c1daf2bd0704"
+    }
+}
+                </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                GET
+            </td>
+            <td>
+                /api/body/measurement/{id}
+            </td>
+            <td>
+                Return one specific measurement as json item based on the passed id (primary key of an measurement).
+            </td>
+            <td>
+                https://body-measurement.herokuapp.com/api/body/measurement/3
+            </td>
+            <td></td>
+            <td>
+                <pre>
+{
+    "data": {
+        "item": {
+            "id": 3,
+            "type": "Blood Pressure",
+            "value": "90/140",
+            "patientId": "05794250-2247-48ac-8a94-ef37f2947141",
+            "createdBy": "Smart Watch",
+            "measuredAt": 1198520460000
+        }
+    },
+    "meta": {
+        "requestedAt": 1500386591593,
+        "responseGUID": "161f034d-37c8-4463-84bb-c4f7f5f618ec"
+    }
+}
+                </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                GET
+            </td>
+            <td>
+                /api/body/measurements
+            </td>
+            <td>
+                Returns a list of all existing measurements. Possible query parameter are:
+                <ul>
+                    <li>patientId</li> returns only measurements that match the passed patientId
+                    <li>page</li> returns the requested page start with 1. Default is 1;
+                    <li>limit</li> limit the size of the result list to this amount. Default is 10. Max is 100.
+                </ul>
+            </td>
+            <td>
+                https://body-measurement.herokuapp.com/api/body/measurements?(patientId=)&(page=)&(limit=)
+            </td>
+            <td></td>
+            <td>
+                <pre>
+{
+    "data": {
+        "size": 3,
+        "items": [
+            {
+                "id": 1,
+                "type": "blood pressure",
+                "value": "90/140",
+                "patientId": "2636d95d-e146-4718-b81a-af51cbfe8c94",
+                "createdBy": null,
+                "measuredAt": 1499702255146
+            },
+            {
+                "id": 2,
+                "type": "blood pressure",
+                "value": "90/140",
+                "patientId": "2636d95d-e146-4718-b81a-af51cbfe8c94",
+                "createdBy": "Doctor Schiwago",
+                "measuredAt": 1499707255146
+            },
+            {
+                "id": 3,
+                "type": "Blood Pressure",
+                "value": "90/140",
+                "patientId": "05794250-2247-48ac-8a94-ef37f2947141",
+                "createdBy": "Smart Watch",
+                "measuredAt": 1198520460000
+            }
+        ]
+    },
+    "paging": {},
+    "meta": {
+        "requestedAt": 1500386708914,
+        "responseGUID": "47be3778-0d22-431d-b7b9-1d59dc37cd97"
+    }
+}
+                </pre>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+
+</body>
+</html>
