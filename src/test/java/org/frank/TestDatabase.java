@@ -14,6 +14,7 @@ import org.frank.utils.TransformationBuilder;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -48,12 +49,16 @@ public class TestDatabase<T> {
         return this;
     }
 
-    public TestDatabase<T> insert(T ...entities) throws SQLException {
+    public TestDatabase<T> insert(List<T> entities) throws SQLException {
         for(T entity : entities) {
             storage.save(entity);
             inserted.add(entity);
         }
         return this;
+    }
+
+    public TestDatabase<T> insert(T ...entities) throws SQLException {
+        return insert(Arrays.asList(entities));
     }
 
     public <E> List<E> insertedAs(TransformationBuilder.SimpleTransformer<T,E> transformer) {

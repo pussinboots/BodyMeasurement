@@ -4,11 +4,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.frank.json.BodyMeasurement;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.utils.TransformationBuilder;
 
-import java.util.Calendar;
 import java.util.Date;
 
 @Data

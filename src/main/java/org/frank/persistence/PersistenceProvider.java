@@ -1,6 +1,7 @@
 package org.frank.persistence;
 
 import org.frank.persistence.database.DatabaseStorage;
+import org.frank.resources.BodyMeasurementResource;
 import org.frank.utils.TransformationBuilder;
 
 import java.io.IOException;
@@ -15,9 +16,14 @@ public class PersistenceProvider {
         Map<String, Object> transform();
     }
 
-    public static class DummyStorageFilter implements StorageFilter {
-        @Override public Map<String, Object> transform() { return null; }
-        @Override public Object transform(Object entity) { return null; }
+    public interface Page {
+        long offset();
+        long limit();
+    }
+
+    private static class DefaultPage implements Page {
+        @Override public long offset() { return 0; }
+        @Override public long limit() { return BodyMeasurementResource.DEFAULT_ITEM_LIMIT; }
     }
 
     public interface Storage<T, ID> {
@@ -27,13 +33,11 @@ public class PersistenceProvider {
 
         <S> S getAs(ID id, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException;
 
-        List<T> list(Map<String, Object> filterFields) throws SQLException;
+        List<T> list(Map<String, Object> filterFields, Page page) throws SQLException;
 
         List<T> list() throws SQLException;
 
-        <S> List<S> listAs(StorageFilter<?> filter, TransformationBuilder.SimpleTransformer<T, S> entityTransformer) throws SQLException;
-
-        <S> List<S> listAs(TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException;
+        <S> List<S> listAs(StorageFilter<?> filter, Page page, TransformationBuilder.SimpleTransformer<T, S> entityTransformer) throws SQLException;
 
         void close() throws IOException;
     }
@@ -47,17 +51,12 @@ public class PersistenceProvider {
 
         @Override
         public List<T> list() throws SQLException {
-            return list(Collections.emptyMap());
+            return list(Collections.emptyMap(), new DefaultPage());
         }
 
         @Override
-        public <S> List<S> listAs(TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException {
-            return listAs(new DummyStorageFilter(), transformer);
-        }
-
-        @Override
-        public <S> List<S> listAs(StorageFilter<?> filter, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException {
-            return TransformationBuilder.<T, S>list(list(filter.transform())).transformer(transformer).apply();
+        public <S> List<S> listAs(StorageFilter<?> filter, Page page, TransformationBuilder.SimpleTransformer<T, S> transformer) throws SQLException {
+            return TransformationBuilder.<T, S>list(list(filter.transform(), page)).transformer(transformer).apply();
         }
     }
 

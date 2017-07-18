@@ -1,17 +1,12 @@
 package org.frank.resources;
 
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import org.frank.TestDatabase;
+import org.frank.TestDatabaseEntities;
 import org.frank.json.ApplicationStatus;
 import org.frank.json.BodyMeasurement;
 import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
-import org.frank.persistence.PersistenceProvider;
 import org.frank.persistence.database.BodyMeasurementDB;
-import org.frank.persistence.database.JDBCUrlResolver;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
@@ -56,19 +51,17 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     }
 
     private void setupTestDB() throws SQLException, IOException {
-        BodyMeasurementDB measurementDBOne = new BodyMeasurementDB().createdBy("test")
-                .measuredAt(Calendar.getInstance().getTime())
-                .patientId(UUID.randomUUID().toString())
-                .state(BodyMeasurementPojo.State.CREATED)
+        BodyMeasurementDB measurementDBOne = TestDatabaseEntities.createEntity(new BodyMeasurementDB()
+                .createdBy("test")
                 .type("Blood Pressure")
-                .value("90/140");
+                .value("90/140")
+        );
 
-        BodyMeasurementDB measurementDBTwo = new BodyMeasurementDB().createdBy("test")
-                .measuredAt(Calendar.getInstance().getTime())
-                .patientId(UUID.randomUUID().toString())
-                .state(BodyMeasurementPojo.State.CREATED)
+        BodyMeasurementDB measurementDBTwo = TestDatabaseEntities.createEntity(new BodyMeasurementDB()
+                .createdBy("test")
                 .type("Body Temperature")
-                .value("36,5");
+                .value("36,5")
+        );
 
         List<BodyMeasurement> inserted = TestDatabase.db(BodyMeasurementDB.class)
                 .startDatabase()

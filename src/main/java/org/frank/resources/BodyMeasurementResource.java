@@ -28,6 +28,22 @@ import static org.frank.utils.CollectionsUtils.Pair.pair;
 @Path("body")
 public class BodyMeasurementResource {
 
+    public static final int DEFAULT_ITEM_LIMIT = 10;
+    public static final int MAX_ITEM_LIMIT = 100;
+
+    @Data
+    @Accessors(fluent = true)
+    public static class Paging implements PersistenceProvider.Page {
+        private @QueryParam("page") @DefaultValue("1") int page = 1;
+        private @QueryParam("limit") @DefaultValue(DEFAULT_ITEM_LIMIT + "") long limit;
+
+        //Paging start with first page that is page 1
+        public int page() { return ( page > 0 )? page - 1 : 0; }
+        public long limit() { return ( limit > 0 && limit <= MAX_ITEM_LIMIT)? limit : DEFAULT_ITEM_LIMIT; }
+        @Override
+        public long offset() { return page() * limit(); }
+    }
+
     @Data
     @Accessors(fluent = true)
     private static class FilterMeasurements implements PersistenceProvider.StorageFilter<FilterMeasurements> {
@@ -73,8 +89,8 @@ public class BodyMeasurementResource {
     @GET
     @Path("measurements")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONResponse<BodyMeasurement> getMeasurements(@BeanParam FilterMeasurements filterMeasurements) throws SQLException {
-        List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(filterMeasurements, entity -> BodyMeasurement.fromPojo(entity.toPojo()));
+    public JSONResponse<BodyMeasurement> getMeasurements(@BeanParam FilterMeasurements filterMeasurements, @BeanParam Paging paging) throws SQLException {
+        List<BodyMeasurement> bodyMeasurements = bodyMeasurementDao.listAs(filterMeasurements, paging, entity -> BodyMeasurement.fromPojo(entity.toPojo()));
         return new JSONResponse<BodyMeasurement>().items(bodyMeasurements);
     }
 
