@@ -40,6 +40,8 @@ public class PersistenceProvider {
         <S> List<S> listAs(StorageFilter<?> filter, Page page, TransformationBuilder.SimpleTransformer<T, S> entityTransformer) throws SQLException;
 
         void close() throws IOException;
+
+        void healthCheck() throws SQLException;
     }
 
     public static abstract class AbstractStorage<T, ID> implements Storage<T, ID> {

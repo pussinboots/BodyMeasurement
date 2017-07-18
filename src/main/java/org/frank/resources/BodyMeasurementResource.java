@@ -56,6 +56,21 @@ public class BodyMeasurementResource {
         public Map<String, Object> transform() { return transform(this); }
     }
 
+    private static class DatabaseStatus {
+        public static Status status(PersistenceProvider.Storage storage) {
+            Status databaseStatus = new Status().type("database");
+            try {
+                storage.healthCheck();
+                databaseStatus.state(State.RUNNING);
+            } catch (SQLException e) {
+                databaseStatus.state(State.ERROR);
+                databaseStatus.errorMessage(e.getMessage());
+            }
+            databaseStatus.checkedAt(Calendar.getInstance().getTime());
+            return databaseStatus;
+        }
+    }
+
 
     private PersistenceProvider.Storage<BodyMeasurementDB, Long> bodyMeasurementDao;
 
@@ -73,7 +88,9 @@ public class BodyMeasurementResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meta/status")
     public ApplicationStatus status() {
-        return new ApplicationStatus().addStatus(new Status().type("application").state(State.RUNNING).checkedAt(Calendar.getInstance().getTime()));
+        return new ApplicationStatus()
+                .addStatus(new Status().type("application").state(State.RUNNING).checkedAt(Calendar.getInstance().getTime()))
+                .addStatus(DatabaseStatus.status(bodyMeasurementDao));
     }
 
     @GET

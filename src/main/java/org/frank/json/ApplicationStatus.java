@@ -23,7 +23,7 @@ public class ApplicationStatus {
     @Data
     @Accessors(fluent = true)
     public static class Status {
-        private String type;
+        private String type, errorMessage;
         private State state;
         private Date checkedAt;
     }

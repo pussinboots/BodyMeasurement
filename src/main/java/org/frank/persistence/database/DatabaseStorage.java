@@ -24,6 +24,11 @@ public class DatabaseStorage<T, ID> extends PersistenceProvider.AbstractStorage<
     }
 
     @Override
+    public void healthCheck() throws SQLException {
+        dao.executeRawNoArgs("Select 1;");
+    }
+
+    @Override
     public T save(T entity) throws SQLException {
         dao.create(entity);
         return entity;
@@ -44,6 +49,8 @@ public class DatabaseStorage<T, ID> extends PersistenceProvider.AbstractStorage<
     public void close() throws IOException {
         dao.getConnectionSource().close();
     }
+
+
 
     protected static <T, ID> List<T> queryForFieldValues(QueryBuilder<T, ID> queryBuilder, Map<String, Object> fieldValues) throws SQLException {
         if(CollectionsUtils.isEmpty(fieldValues)) {

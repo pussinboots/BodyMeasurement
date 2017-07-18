@@ -22,7 +22,7 @@ public class BodyMeasurement {
 
 	private Long id;
 	private String type, value, patientId, createdBy;
-	public Date measuredAt;
+	private Date measuredAt;
 
 	public static TransformationBuilder.SimpleTransformer<BodyMeasurement, BodyMeasurementPojo> tranformerToPojo() {
 		return entity -> {
