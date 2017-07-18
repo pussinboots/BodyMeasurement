@@ -33,9 +33,15 @@ Implementation of a rest API that stores body measurements for example body temp
 * Web Container
 * PostgreSQL 9
 
+## Model
+
+The following picture show the json scheme of the responses of that api.
+![json response model](docs/uml/json_response.png?raw=true "json response model")
+
 ## Demo 
 
-The running instance is deployed on Heroku [here](https://body-measurement.herokuapp.com/index.html).
+The running instance is deployed on Heroku [here](https://body-measurement.herokuapp.com/index.html). That link list all available rest 
+method's and how they can be used. 
 
 ## Packaging
 
