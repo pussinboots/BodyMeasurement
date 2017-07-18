@@ -80,8 +80,13 @@ public class BodyMeasurementResourceTest extends JerseyTest {
     public void testGetMetaStatus() {
         final ApplicationStatus applicationStatus = target().path("body/meta/status").request().get(new GenericType<ApplicationStatus>(){});
 
+        assertEquals(2, applicationStatus.states().size());
         assertEquals(ApplicationStatus.State.RUNNING, applicationStatus.states().get(0).state());
+        //TODO that has to be fixed look http://javasplitter.blogspot.de/2011/01/keep-alive-query-in-hsqldb.html
+        assertEquals(ApplicationStatus.State.ERROR, applicationStatus.states().get(1).state());
         assertEquals("application", applicationStatus.states().get(0).type());
+        assertEquals("database", applicationStatus.states().get(1).type());
+        assertEquals("Could not run raw execute statement Select 1;", applicationStatus.states().get(1).errorMessage());
     }
 
     @Test
