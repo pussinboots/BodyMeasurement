@@ -11,12 +11,9 @@ import org.frank.persistence.PersistenceProvider;
 import org.frank.persistence.database.BodyMeasurementDB;
 import org.frank.utils.CollectionsUtils;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
@@ -72,18 +69,8 @@ public class BodyMeasurementResource {
         }
     }
 
-
-    private PersistenceProvider.Storage<BodyMeasurementDB, Long> bodyMeasurementDao;
-
-    @PostConstruct
-    public void setup() throws SQLException {
-        bodyMeasurementDao = PersistenceProvider.storage(BodyMeasurementDB.class);
-    }
-
-    @PreDestroy
-    public void pre_destroy () throws IOException {
-        bodyMeasurementDao.close();
-    }
+    @Inject
+    PersistenceProvider.Storage<BodyMeasurementDB, Long> bodyMeasurementDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

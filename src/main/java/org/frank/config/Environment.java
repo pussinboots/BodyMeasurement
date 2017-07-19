@@ -38,7 +38,7 @@ public class Environment {
     }
 
     public static void initDefaults() {
-        defaultProperty("JDBC_DATABASE_URL", "jdbc:postgresql://localhost:5432?user=postgres");
+        defaultProperty("JDBC_DATABASE_URL", "jdbc:postgresql://localhost:5432/postgres?user=postgres");
         defaultProperty("DATABASE_HEALTH_QUERY", "Select 1;");
     }
 

@@ -12,20 +12,6 @@ import java.util.Map;
 
 public class PersistenceProvider {
 
-    public interface StorageFilter<Filter> extends TransformationBuilder.SimpleTransformer<Filter,Map<String,Object>> {
-        Map<String, Object> transform();
-    }
-
-    public interface Page {
-        long offset();
-        long limit();
-    }
-
-    private static class DefaultPage implements Page {
-        @Override public long offset() { return 0; }
-        @Override public long limit() { return BodyMeasurementResource.DEFAULT_ITEM_LIMIT; }
-    }
-
     public interface Storage<T, ID> {
         T save(T entity) throws SQLException;
 
@@ -42,6 +28,20 @@ public class PersistenceProvider {
         void close() throws IOException;
 
         void healthCheck() throws SQLException;
+    }
+
+    public interface StorageFilter<Filter> extends TransformationBuilder.SimpleTransformer<Filter,Map<String,Object>> {
+        Map<String, Object> transform();
+    }
+
+    public interface Page {
+        long offset();
+        long limit();
+    }
+
+    private static class DefaultPage implements Page {
+        @Override public long offset() { return 0; }
+        @Override public long limit() { return BodyMeasurementResource.DEFAULT_ITEM_LIMIT; }
     }
 
     public static abstract class AbstractStorage<T, ID> implements Storage<T, ID> {

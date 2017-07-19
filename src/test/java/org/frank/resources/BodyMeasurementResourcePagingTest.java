@@ -8,7 +8,12 @@ import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
 import org.frank.persistence.database.BodyMeasurementDB;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
+import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.ServletDeploymentContext;
+import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,8 +90,16 @@ public class BodyMeasurementResourcePagingTest extends JerseyTest {
     }
 
     @Override
-    protected Application configure() {
-        return new ResourceConfig(BodyMeasurementResource.class);
+    protected DeploymentContext configureDeployment() {
+        ResourceConfig resourceConfig = ResourceConfig.forApplication(new BodyMeasurementApplication());
+        ServletDeploymentContext deploymentContext = ServletDeploymentContext.forServlet(new ServletContainer(resourceConfig))
+                .build();
+        return deploymentContext;
+    }
+
+    @Override
+    protected TestContainerFactory getTestContainerFactory() {
+        return new GrizzlyWebTestContainerFactory();
     }
 
     @Test
