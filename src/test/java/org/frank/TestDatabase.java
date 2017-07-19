@@ -7,8 +7,8 @@ import com.j256.ormlite.table.TableUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.frank.config.Environment;
 import org.frank.persistence.PersistenceProvider;
-import org.frank.persistence.database.JDBCUrlResolver;
 import org.frank.utils.TransformationBuilder;
 
 import java.io.IOException;
@@ -29,8 +29,8 @@ public class TestDatabase<T> {
     private PersistenceProvider.Storage<T, Long> storage;
 
     public TestDatabase<T> startDatabase() throws SQLException {
-        ConnectionSource connectionSource = new JdbcConnectionSource(JDBCUrlResolver.jdbcUrl());
-        DaoManager.createDao( connectionSource, databaseEntityClass ).executeRaw("DROP SCHEMA PUBLIC CASCADE");
+        ConnectionSource connectionSource = new JdbcConnectionSource(Environment.environment().config().jdbcUrl());
+        DaoManager.createDao( connectionSource, databaseEntityClass ).executeRaw("DROP SCHEMA PUBLIC CASCADE;");
 
         TableUtils.createTableIfNotExists(connectionSource, databaseEntityClass);
         connectionSource.closeQuietly();

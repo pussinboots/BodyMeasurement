@@ -2,6 +2,7 @@ package org.frank.resources;
 
 import org.frank.TestDatabase;
 import org.frank.TestDatabaseEntities;
+import org.frank.config.Environment;
 import org.frank.json.ApplicationStatus;
 import org.frank.json.BodyMeasurement;
 import org.frank.json.JSONResponse;
@@ -28,7 +29,9 @@ import static org.junit.Assert.*;
 public class BodyMeasurementResourceTest extends JerseyTest {
 
     static {
-        System.setProperty("JDBC_DATABASE_URL", "jdbc:hsqldb:mem:test");
+        Environment.environment().config()
+                .jdbcUrl("jdbc:hsqldb:mem:test")
+                .databaseHealthQuery("SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES;");
     }
 
     public static void logToStdOut (String className)
@@ -82,11 +85,9 @@ public class BodyMeasurementResourceTest extends JerseyTest {
 
         assertEquals(2, applicationStatus.states().size());
         assertEquals(ApplicationStatus.State.RUNNING, applicationStatus.states().get(0).state());
-        //TODO that has to be fixed look http://javasplitter.blogspot.de/2011/01/keep-alive-query-in-hsqldb.html
-        assertEquals(ApplicationStatus.State.ERROR, applicationStatus.states().get(1).state());
+        assertEquals(ApplicationStatus.State.RUNNING, applicationStatus.states().get(1).state());
         assertEquals("application", applicationStatus.states().get(0).type());
         assertEquals("database", applicationStatus.states().get(1).type());
-        assertEquals("Could not run raw execute statement Select 1;", applicationStatus.states().get(1).errorMessage());
     }
 
     @Test

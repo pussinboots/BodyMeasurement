@@ -6,6 +6,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
+import org.frank.config.Environment;
 import org.frank.persistence.PersistenceProvider;
 import org.frank.utils.CollectionsUtils;
 
@@ -19,13 +20,13 @@ public class DatabaseStorage<T, ID> extends PersistenceProvider.AbstractStorage<
     private Dao<T, ID> dao;
 
     public DatabaseStorage(Class<T> clazz) throws SQLException {
-        ConnectionSource connectionSource = new JdbcConnectionSource(JDBCUrlResolver.jdbcUrl());
+        ConnectionSource connectionSource = new JdbcConnectionSource(Environment.environment().config().jdbcUrl());
         this.dao = DaoManager.createDao( connectionSource, clazz );
     }
 
     @Override
     public void healthCheck() throws SQLException {
-        dao.executeRawNoArgs("Select 1;");
+        dao.executeRawNoArgs(Environment.environment().config().databaseHealthQuery());
     }
 
     @Override

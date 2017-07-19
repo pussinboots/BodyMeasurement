@@ -14,6 +14,7 @@ import org.frank.utils.CollectionsUtils;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.sql.SQLException;

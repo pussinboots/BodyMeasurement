@@ -2,6 +2,7 @@ package org.frank.resources;
 
 import org.frank.TestDatabase;
 import org.frank.TestDatabaseEntities;
+import org.frank.config.Environment;
 import org.frank.json.BodyMeasurement;
 import org.frank.json.JSONResponse;
 import org.frank.persistence.BodyMeasurementPojo;
@@ -30,7 +31,9 @@ import static org.junit.Assert.assertEquals;
 public class BodyMeasurementResourcePagingTest extends JerseyTest {
 
     static {
-        System.setProperty("JDBC_DATABASE_URL", "jdbc:hsqldb:mem:test");
+        Environment.environment().config()
+                .jdbcUrl("jdbc:hsqldb:mem:test")
+                .databaseHealthQuery("SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES;");
     }
 
     public static void logToStdOut (String className)
