@@ -27,7 +27,7 @@ public class EnvironmentTest {
 
     @Test
     public void testInitDefaults() throws Exception {
-        assertEquals("jdbc:postgresql://localhost:5432?user=postgres", System.getProperty("JDBC_DATABASE_URL"));
+        assertEquals("jdbc:postgresql://localhost:5432/postgres?user=postgres", System.getProperty("JDBC_DATABASE_URL"));
         assertEquals("Select 1;", System.getProperty("DATABASE_HEALTH_QUERY"));
     }
 

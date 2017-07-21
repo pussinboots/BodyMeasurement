@@ -157,6 +157,15 @@
                     <war>${project.build.directory}/${project.build.finalName}.war</war>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -168,5 +177,6 @@
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <lombok.version>1.16.18</lombok.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
+        <surefire.version>2.20</surefire.version>
     </properties>
 </project>

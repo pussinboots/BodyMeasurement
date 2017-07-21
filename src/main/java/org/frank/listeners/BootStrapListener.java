@@ -13,7 +13,6 @@ import java.sql.SQLException;
 public class BootStrapListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent sce) {
-
         Environment.initDefaults();
         try {
             ConnectionSource connectionSource = new JdbcConnectionSource(Environment.environment().config().jdbcUrl());
